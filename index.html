@@ -11,10 +11,10 @@
             background:linear-gradient(135deg,#ffe4e1,#ffd7be,#ff9aa2,#b5ead7,#c7ceea);
             background-size:400% 400%;
             animation:bg 20s ease infinite;
-            height:100vh;
-            overflow:hidden;
+            min-height:100vh;
             color:#333;
             touch-action:manipulation;
+            /* Removed overflow:hidden to enable scrolling */
         }
         @keyframes bg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
@@ -36,19 +36,27 @@
         }
 
         .page{
-            position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-            padding:20px;opacity:0;transition:all 1s ease;
+            position:relative; /* Changed from absolute to relative for scrolling */
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            opacity:0;
+            transition:all 1s ease;
         }
         .page.active{opacity:1;z-index:10;}
 
         .card{
-            max-width:420px;width:95%;
+            max-width:420px;
+            width:95%;
             background:rgba(255,255,255,0.97);
             border-radius:30px;
             padding:40px 30px;
             box-shadow:0 30px 70px rgba(0,0,0,0.25);
             text-align:center;
             border:1px solid rgba(255,255,255,0.9);
+            margin: 20px 0; /* Added margin for better spacing when scrolling */
         }
         .title{
             font-size:4.8rem;
@@ -85,16 +93,22 @@
             transition:0.3s;
         }
         .btn:active{transform:scale(0.94);}
-        .progress{height:7px;background:rgba(0,0,0,0.2);border-radius:10px;overflow:hidden;position:fixed;top:16px;left:50%;transform:translateX(-50%);width:82%;max-width:400px;}
+        .progress{height:7px;background:rgba(0,0,0,0.2);border-radius:10px;overflow:hidden;position:fixed;top:16px;left:50%;transform:translateX(-50%);width:82%;max-width:400px;z-index:100;}
         .fill{height:100%;width:0%;background:#000;transition:width 0.7s;}
 
         .joke{font-size:1.4rem;color:#e91e63;margin:30px 0;}
         .gift{font-size:5rem;animation:pulse 2s infinite;}
         @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+        
+        /* Mobile-specific styles */
         @media(max-width:480px){
             .title{font-size:3.9rem;}
             .sinhala{font-size:1.2rem;}
             .card{padding:35px 22px;}
+            .page{
+                min-height:100vh;
+                padding: 60px 20px 20px; /* Added top padding for progress bar */
+            }
         }
     </style>
 </head>
@@ -122,7 +136,7 @@
                 මගේ ස්ට්‍රෝං කෙල්ල! මේ ඔබගේ විසිපස්වන උපන් දින වසරේ ආරම්භයයි ♡<br>
                 සාර්ථකත්වයෙන් පිරිපුන් පුදුමාකාර වසරක් වේවා කියලා මම ප්‍රාර්ථනා කරනවා. ඔබට හැම දෙයක්ම ජයගෙන, සෑම ඉලක්කයක්ම සපුරා ගන්නට අවශ්‍ය ශක්තිය තියෙන බව මම දන්නවා. ඉදිරියට යන්න, මේක හොඳම වසර කරගන්න! මම ඔබ ගැන ගොඩක් ආඩම්බරයි, මම ඔබට ගොඩක් ආදරෙයි.
             </div>
-            <button class="btn" onclick="next(3)">See our moment 🥰</button>
+            <button class="btn" onclick="next(3)">See our moment 👀</button>
         </div>
     </div>
 
@@ -132,7 +146,7 @@
             <h1 class="title">This moment ♡</h1>
             <img src="memory.jpeg" class="photo" alt="Our memory">
             <p class="text italic" style="color:#555;">
-                “ඔයා මගේ අත එක තත්පරයක් තියාගෙන හිනාවෙනකොට මම හිතුවේ මේක ලෝකෙම ලස්සනම දවස කියලා”
+                "ඔයා මගේ අත එක තත්පරයක් තියාගෙන හිනාවෙනකොට මම හිතුවේ මේක ලෝකෙම ලස්සනම දවස කියලා"
             </p>
             <p class="text">Still my favourite photo in the whole universe 🖤</p>
             <button class="btn" onclick="next(4)">One last thing...</button>
@@ -157,7 +171,7 @@
             <div class="gift">🎁</div>
             <p class="text" style="font-size:1.4rem;margin-top:20px;">
                 A small real gift is already on the way...<br>
-                You’ll receive it within few days 😜
+                You'll receive it within few days 😜
             </p>
 
             <button class="btn" onclick="celebrate()">Celebrate me! 🎉</button>
@@ -172,6 +186,9 @@
             step = n;
             document.getElementById('p'+step).classList.add('active');
             document.getElementById('fill').style.width = ((step-1)/3*100)+'%';
+            
+            // Scroll to the top of the new page
+            document.getElementById('p'+step).scrollIntoView({ behavior: 'smooth' });
         }
 
         // Black floating hearts
