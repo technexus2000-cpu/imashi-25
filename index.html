@@ -6,6 +6,10 @@
     <title>For My Imashi ♡ 25</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
         body{
             font-family:'Segoe UI',sans-serif;
             background:linear-gradient(135deg,#ffe4e1,#ffd7be,#ff9aa2,#b5ead7,#c7ceea);
@@ -13,13 +17,21 @@
             animation:bg 20s ease infinite;
             min-height:100vh;
             color:#333;
-            touch-action:manipulation;
-            /* Removed overflow:hidden to enable scrolling */
+            touch-action:pan-y; /* Changed from manipulation to pan-y for better scrolling */
+            position: relative;
         }
         @keyframes bg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
         /* Black floating hearts */
-        .hearts{position:fixed;inset:0;pointer-events:none;z-index:1;}
+        .hearts{
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            pointer-events:none;
+            z-index:1;
+        }
         .bh{
             position:absolute;
             font-size:2.8rem;
@@ -35,17 +47,31 @@
             100%{transform:translateY(-120px) rotate(360deg);opacity:0}
         }
 
+        .container {
+            position: relative;
+            width: 100%;
+        }
+
         .page{
-            position:relative; /* Changed from absolute to relative for scrolling */
+            width:100%;
             min-height:100vh;
             display:flex;
             align-items:center;
             justify-content:center;
             padding:20px;
             opacity:0;
-            transition:all 1s ease;
+            transition:opacity 1s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: hidden;
         }
-        .page.active{opacity:1;z-index:10;}
+        .page.active{
+            opacity:1;
+            z-index:10;
+            visibility: visible;
+            position: relative;
+        }
 
         .card{
             max-width:420px;
@@ -56,7 +82,7 @@
             box-shadow:0 30px 70px rgba(0,0,0,0.25);
             text-align:center;
             border:1px solid rgba(255,255,255,0.9);
-            margin: 20px 0; /* Added margin for better spacing when scrolling */
+            margin: 40px 0;
         }
         .title{
             font-size:4.8rem;
@@ -93,21 +119,42 @@
             transition:0.3s;
         }
         .btn:active{transform:scale(0.94);}
-        .progress{height:7px;background:rgba(0,0,0,0.2);border-radius:10px;overflow:hidden;position:fixed;top:16px;left:50%;transform:translateX(-50%);width:82%;max-width:400px;z-index:100;}
+        .progress{
+            height:7px;
+            background:rgba(0,0,0,0.2);
+            border-radius:10px;
+            overflow:hidden;
+            position:fixed;
+            top:16px;
+            left:50%;
+            transform:translateX(-50%);
+            width:82%;
+            max-width:400px;
+            z-index:100;
+        }
         .fill{height:100%;width:0%;background:#000;transition:width 0.7s;}
 
         .joke{font-size:1.4rem;color:#e91e63;margin:30px 0;}
         .gift{font-size:5rem;animation:pulse 2s infinite;}
         @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-
+        
         /* Mobile-specific styles */
         @media(max-width:480px){
             .title{font-size:3.9rem;}
             .sinhala{font-size:1.2rem;}
             .card{padding:35px 22px;}
             .page{
-                min-height:100vh;
-                padding: 60px 20px 20px; /* Added top padding for progress bar */
+                padding: 60px 20px 20px;
+            }
+            body {
+                overflow-y: auto; /* Ensure scrolling is enabled */
+            }
+        }
+
+        /* Ensure scrolling works on all devices */
+        @media (max-height: 700px) {
+            .page {
+                min-height: 700px; /* Minimum height for very short screens */
             }
         }
     </style>
@@ -117,78 +164,90 @@
     <div class="hearts" id="hearts"></div>
     <div class="progress"><div class="fill" id="fill"></div></div>
 
-    <!-- 1 -->
-    <div class="page active" id="p1">
-        <div class="card">
-            <h1 class="title">Imashi ♡</h1>
-            <p class="text">Tap anywhere to feel my love ❤️</p>
-            <button class="btn" onclick="next(2)">Open my heart</button>
-        </div>
-    </div>
-
-    <!-- 2 -->
-    <div class="page" id="p2">
-        <div class="card">
-            <h1 class="title">Happy 25th my love!</h1>
-            <p class="text">You are officially too old to count the candles... but still young enough to make all my wishes come true 🥰</p>
-            <div class="sinhala">
-                Imashi,<br><br>
-                මගේ ස්ට්‍රෝං කෙල්ල! මේ ඔබගේ විසිපස්වන උපන් දින වසරේ ආරම්භයයි ♡<br>
-                සාර්ථකත්වයෙන් පිරිපුන් පුදුමාකාර වසරක් වේවා කියලා මම ප්‍රාර්ථනා කරනවා. ඔබට හැම දෙයක්ම ජයගෙන, සෑම ඉලක්කයක්ම සපුරා ගන්නට අවශ්‍ය ශක්තිය තියෙන බව මම දන්නවා. ඉදිරියට යන්න, මේක හොඳම වසර කරගන්න! මම ඔබ ගැන ගොඩක් ආඩම්බරයි, මම ඔබට ගොඩක් ආදරෙයි.
+    <div class="container">
+        <!-- 1 -->
+        <div class="page active" id="p1">
+            <div class="card">
+                <h1 class="title">Imashi ♡</h1>
+                <p class="text">Tap anywhere to feel my love ❤️</p>
+                <button class="btn" onclick="next(2)">Open my heart</button>
             </div>
-            <button class="btn" onclick="next(3)">See our moment 🥰</button>
         </div>
-    </div>
 
-    <!-- 3 - Your real photo -->
-    <div class="page" id="p3">
-        <div class="card">
-            <h1 class="title">This moment ♡</h1>
-            <img src="memory.jpeg" class="photo" alt="Our memory">
-            <p class="text italic" style="color:#555;">
-                "ඔයා මගේ අත එක තත්පරයක් තියාගෙන හිනාවෙනකොට මම හිතුවේ මේක ලෝකෙම ලස්සනම දවස කියලා"
-            </p>
-            <p class="text">Still my favourite photo in the whole universe 🖤</p>
-            <button class="btn" onclick="next(4)">One last thing...</button>
-        </div>
-    </div>
-
-    <!-- 4 - Final + joke + gift -->
-    <div class="page" id="p4">
-        <div class="card">
-            <h1 class="title">Imashi ♡</h1>
-            <p class="text" style="font-size:1.3rem;line-height:2.1;">
-                Not just 25 more years —<br>
-                <b>Forever.</b><br><br>
-                Happy 25th birthday, my love 🖤
-            </p>
-
-            <div class="joke">
-                Scientists say humans can live up to 120 years...<br>
-                So I only have 95 more birthdays to annoy you 😈
+        <!-- 2 -->
+        <div class="page" id="p2">
+            <div class="card">
+                <h1 class="title">Happy 25th my love!</h1>
+                <p class="text">You are officially too old to count the candles... but still young enough to make all my wishes come true 🥰</p>
+                <div class="sinhala">
+                    Imashi,<br><br>
+                    මගේ ස්ට්‍රෝං කෙල්ල! මේ ඔබගේ විසිපස්වන උපන් දින වසරේ ආරම්භයයි ♡<br>
+                    සාර්ථකත්වයෙන් පිරිපුන් පුදුමාකාර වසරක් වේවා කියලා මම ප්‍රාර්ථනා කරනවා. ඔබට හැම දෙයක්ම ජයගෙන, සෑම ඉලක්කයක්ම සපුරා ගන්නට අවශ්‍ය ශක්තිය තියෙන බව මම දන්නවා. ඉදිරියට යන්න, මේක හොඳම වසර කරගන්න! මම ඔබ ගැන ගොඩක් ආඩම්බරයි, මම ඔබට ගොඩක් ආදරෙයි.
+                </div>
+                <button class="btn" onclick="next(3)">See our moment 🥰</button>
             </div>
+        </div>
 
-            <div class="gift">🎁</div>
-            <p class="text" style="font-size:1.4rem;margin-top:20px;">
-                A small real gift is already on the way...<br>
-                You'll receive it within few days 😜
-            </p>
+        <!-- 3 - Your real photo -->
+        <div class="page" id="p3">
+            <div class="card">
+                <h1 class="title">This moment ♡</h1>
+                <img src="memory.jpeg" class="photo" alt="Our memory">
+                <p class="text italic" style="color:#555;">
+                    "ඔයා මගේ අත එක තත්පරයක් තියාගෙන හිනාවෙනකොට මම හිතුවේ මේක ලෝකෙම ලස්සනම දවස කියලා"
+                </p>
+                <p class="text">Still my favourite photo in the whole universe 🖤</p>
+                <button class="btn" onclick="next(4)">One last thing...</button>
+            </div>
+        </div>
 
-            <button class="btn" onclick="celebrate()">Celebrate me! 🎉</button>
-            <p style="margin-top:25px;color:#666;">— made with every beat of my heart 🖤</p>
+        <!-- 4 - Final + joke + gift -->
+        <div class="page" id="p4">
+            <div class="card">
+                <h1 class="title">Imashi ♡</h1>
+                <p class="text" style="font-size:1.3rem;line-height:2.1;">
+                    Not just 25 more years —<br>
+                    <b>Forever.</b><br><br>
+                    Happy 25th birthday, my love 🖤
+                </p>
+
+                <div class="joke">
+                    Scientists say humans can live up to 120 years...<br>
+                    So I only have 95 more birthdays to annoy you 😈
+                </div>
+
+                <div class="gift">🎁</div>
+                <p class="text" style="font-size:1.4rem;margin-top:20px;">
+                    A small real gift is already on the way...<br>
+                    You'll receive it within few days 😜
+                </p>
+
+                <button class="btn" onclick="celebrate()">Celebrate me! 🎉</button>
+                <p style="margin-top:25px;color:#666;">— made with every beat of my heart 🖤</p>
+            </div>
         </div>
     </div>
 
     <script>
         let step = 1;
+        
         function next(n){
+            // Hide current page
             document.getElementById('p'+step).classList.remove('active');
+            
+            // Show new page
             step = n;
-            document.getElementById('p'+step).classList.add('active');
+            const newPage = document.getElementById('p'+step);
+            newPage.classList.add('active');
+            
+            // Update progress bar
             document.getElementById('fill').style.width = ((step-1)/3*100)+'%';
-
-            // Scroll to the top of the new page
-            document.getElementById('p'+step).scrollIntoView({ behavior: 'smooth' });
+            
+            // Scroll to top of page
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
 
         // Black floating hearts
@@ -210,6 +269,7 @@
             h.style.top=e.clientY-25+'px';
             h.style.fontSize='3rem';
             h.style.pointerEvents='none';
+            h.style.zIndex = '1000';
             h.innerHTML='🖤';
             document.body.appendChild(h);
             setTimeout(()=>h.remove(), 1500);
@@ -222,6 +282,11 @@
             confetti({particleCount:80, angle:60, spread:60, origin:{x:0}, shapes:['heart'], colors:['#000']});
             confetti({particleCount:80, angle:120, spread:60, origin:{x:1}, shapes:['heart'], colors:['#000']});
         }
+
+        // Ensure body allows scrolling
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.overflowY = 'auto';
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 </body>
